@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.PlateMapper">
+
+    <!-- 插入语句 -->
+    <!-- 插入语句 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plate_record (
+            plate_number,
+            confidence,
+            cropped_image_url,
+            image_url,
+            create_time
+        )
+        VALUES (
+                   #{plateNumber},
+                   #{confidence},
+                   #{croppedImageUrl},
+                   #{imageUrl},
+                   NOW()
+               )
+    </insert>
+
+    <!-- 查询所有 -->
+    <select id="selectAll" resultType="com.example.springboot.entity.PlateRecord">
+        SELECT * FROM plate_record ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultType="com.example.springboot.entity.PlateRecord" parameterType="long">
+        SELECT * FROM plate_record WHERE id = #{id}
+    </select>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM plate_record WHERE id = #{id}
+    </delete>
+
+    <!-- 根据车牌号模糊查询 -->
+    <select id="selectByPlateNumber" resultType="com.example.springboot.entity.PlateRecord">
+        SELECT * FROM plate_record
+        <where>
+            <if test="plateNumber != null and plateNumber != ''">
+                <bind name="pattern" value="'%' + plateNumber + '%'"/>
+                AND plate_number LIKE #{pattern}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+</mapper>

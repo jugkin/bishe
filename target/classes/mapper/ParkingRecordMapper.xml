@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springboot.mapper.ParkingRecordMapper">
+
+    <!-- 修正1: 所有 column 名称必须与数据库表中的列名完全一致 -->
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.ParkingRecord">
+        <id column="id" property="id"/>
+        <result column="plate_number" property="plateNumber"/>   <!-- 修正为 plate_number -->
+        <result column="region_name" property="regionName"/>
+        <result column="entry_time" property="entryTime"/>
+        <result column="exit_time" property="exitTime"/>
+        <result column="fee" property="fee"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>     <!-- 修正为 create_time -->
+        <result column="update_time" property="updateTime"/>     <!-- 修正为 update_time -->
+    </resultMap>
+
+    <!-- 修正2: 表名从 parking_records 改为 parking_record -->
+    <!-- 修正3: SELECT 的字段列表也需同步修正 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT id, plate_number, region_name, entry_time, exit_time, fee, status, create_time, update_time
+        FROM parking_record
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        SELECT id, plate_number, region_name, entry_time, exit_time, fee, status, create_time, update_time
+        FROM parking_record WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.springboot.entity.ParkingRecord">
+        INSERT INTO parking_record (
+            plate_number, region_name, entry_time, exit_time, fee, status, create_time, update_time
+        ) VALUES (
+                     #{plateNumber}, #{regionName}, #{entryTime}, #{exitTime}, #{fee}, #{status},
+                     #{createTime}, #{updateTime}
+                 )
+    </insert>
+
+    <update id="update" parameterType="com.example.springboot.entity.ParkingRecord">
+        UPDATE parking_record
+        SET plate_number = #{plateNumber},
+        region_name = #{regionName},
+        entry_time = #{entryTime},
+        exit_time = #{exitTime},
+        fee = #{fee},
+        status = #{status},
+        update_time = #{updateTime} <!-- 注意：通常更新时只改 update_time -->
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM parking_record WHERE id = #{id}
+    </delete>
+
+</mapper>

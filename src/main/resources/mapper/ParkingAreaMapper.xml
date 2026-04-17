@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.ParkingAreaMapper">
+
+    <select id="selectAll" resultType="com.example.springboot.entity.ParkingArea">
+        SELECT id, area_name AS areaName,
+               available_spots AS availableSpots,
+               occupied_spots AS occupiedSpots,
+               hourly_rate AS hourlyRate,
+               status
+        FROM parking_area
+        ORDER BY id
+    </select>
+
+    <select id="selectByPage" resultType="com.example.springboot.entity.ParkingArea">
+        SELECT id, area_name AS areaName,
+               available_spots AS availableSpots,
+               occupied_spots AS occupiedSpots,
+               hourly_rate AS hourlyRate,
+               status
+        FROM parking_area
+        ORDER BY id
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM parking_area
+    </select>
+
+</mapper>
