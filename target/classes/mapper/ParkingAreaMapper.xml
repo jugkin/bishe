@@ -26,5 +26,27 @@
     <select id="count" resultType="int">
         SELECT COUNT(*) FROM parking_area
     </select>
+    <update id="updateById" parameterType="com.example.springboot.entity.ParkingArea">
+        UPDATE parking_area
+        <set>
+            <if test="areaName != null and areaName != ''">
+                area_name = #{areaName},
+            </if>
+            <if test="availableSpots != null">
+                available_spots = #{availableSpots},
+            </if>
+            <if test="occupiedSpots != null">
+                occupied_spots = #{occupiedSpots},
+            </if>
+            <if test="hourlyRate != null">
+                hourly_rate = #{hourlyRate},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>

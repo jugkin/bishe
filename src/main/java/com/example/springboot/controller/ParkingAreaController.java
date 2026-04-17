@@ -36,4 +36,22 @@ public class ParkingAreaController {
         result.put("total", total);
         return result;
     }
+    @PutMapping
+    public Map<String, Object> update(@RequestBody ParkingArea parkingArea) {
+        // 1. 调用 Service 执行更新
+        boolean success = parkingAreaService.update(parkingArea);
+
+        // 2. 构建响应（保持与 list 接口一致的风格）
+        Map<String, Object> result = new HashMap<>();
+        if (success) {
+            result.put("msg", "更新成功");
+        } else {
+            result.put("msg", "更新失败");
+        }
+        return result;
+    }
+
+
+
+
 }

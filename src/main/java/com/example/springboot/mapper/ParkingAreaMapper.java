@@ -9,4 +9,6 @@ public interface ParkingAreaMapper {
     List<ParkingArea> selectAll(); // 用于测试
     List<ParkingArea> selectByPage(int offset, int limit);
     int count();
+
+    int updateById(ParkingArea parkingArea);
 }

@@ -23,4 +23,16 @@ public class ParkingAreaService {
     public int count() {
         return parkingAreaMapper.count();
     }
+
+    /**
+     * 新增：更新车位区域信息
+     * @param parkingArea 包含 id, hourlyRate, status 的对象
+     * @return 是否更新成功
+     */
+    public boolean update(ParkingArea parkingArea) {
+        // 调用 MyBatis-Plus 提供的 updateById 方法
+        // 它会根据实体中的 id 字段，更新所有非空字段
+        int rowsAffected = parkingAreaMapper.updateById(parkingArea);
+        return rowsAffected > 0;
+    }
 }
