@@ -28,7 +28,7 @@ public interface ParkingRecordMapper {
             "update_time = NOW() " +
             "WHERE id = #{id}")
     void updateById(ParkingRecord record);
-
+    List<ParkingRecord> findByCondition(@Param("plateNumber") String plateNumber, @Param("status") Byte status);
 
 
     List<ParkingRecord> findAll();

@@ -53,5 +53,20 @@
     <delete id="deleteById" parameterType="long">
         DELETE FROM parking_record WHERE id = #{id}
     </delete>
+    <select id="findByCondition" resultMap="BaseResultMap">
+        SELECT id, plate_number, region_name, entry_time, exit_time, fee, status, create_time, update_time
+        FROM parking_record
+        <where>
+            <!-- 车牌号模糊查询 -->
+            <if test="plateNumber != null and plateNumber != ''">
+                AND plate_number LIKE CONCAT('%', #{plateNumber}, '%')
+            </if>
+            <!-- 状态精确查询 -->
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
 
 </mapper>

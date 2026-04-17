@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.entity.ParkingRecord;
 import com.example.springboot.service.ParkingRecordService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,5 +106,19 @@ public class ParkingController {
         parkingRecordService.updateRecord(record);
 
         return ResponseEntity.ok("出场成功");
+    }
+    @GetMapping("/page")
+    public Map<String, Object> getPage(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String plateNumber,
+            @RequestParam(required = false) Byte status) {
+
+        PageInfo<ParkingRecord> pageInfo = parkingRecordService.findPage(page, size, plateNumber, status);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", pageInfo.getList());
+        result.put("total", pageInfo.getTotal());
+        return result;
     }
 }

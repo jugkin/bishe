@@ -28,11 +28,17 @@ public class ParkingAreaService {
 
     /**
      * 新增：更新车位区域信息
+     *
      * @param parkingArea 包含 id, hourlyRate, status 的对象
      * @return 是否更新成功
      */
     public boolean update(ParkingArea parkingArea) {
         int rowsAffected = parkingAreaMapper.updateById(parkingArea);
         return rowsAffected > 0;
+    }
+
+    public ParkingArea getByAreaName(String areaName) {
+        return parkingAreaMapper.selectByAreaName(areaName);
+
     }
 }

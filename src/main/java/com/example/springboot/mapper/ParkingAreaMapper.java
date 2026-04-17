@@ -3,6 +3,7 @@ package com.example.springboot.mapper;
 import com.example.springboot.entity.ParkingArea;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface ParkingAreaMapper {
     int countWithKeyword(@Param("keyword") String keyword);
 
     int updateById(ParkingArea parkingArea);
+    @Select("SELECT * FROM parking_area WHERE area_name = #{areaName}")
+    ParkingArea selectByAreaName(@Param("areaName") String areaName);
 }

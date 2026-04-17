@@ -1,9 +1,12 @@
 package com.example.springboot.service;
 
+import com.example.springboot.entity.ParkingArea;
 import com.example.springboot.entity.ParkingRecord;
 import com.example.springboot.entity.PlateRecord;
 import com.example.springboot.mapper.ParkingRecordMapper;
 import com.example.springboot.mapper.PlateMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,9 @@ public class ParkingRecordService {
 
     @Autowired
     private ParkingRecordMapper parkingRecordMapper;
+
+    @Autowired
+    private ParkingAreaService parkingAreaService;
 
     public void handleEntry(String plateNumber, String regionName, LocalDateTime now) {
         // 1. 保存识别记录（可选：如果入口不存 plate_record，可跳过）
@@ -59,8 +65,18 @@ public class ParkingRecordService {
         }
 
         // 3. 计算费用（示例）
+        ParkingArea area = parkingAreaService.getByAreaName(active.getRegionName());
+        if (area == null || area.getHourlyRate() == null) {
+            throw new RuntimeException("未找到区域 '" + active.getRegionName() + "' 的计费信息！");
+        }
+        BigDecimal hourlyRate = area.getHourlyRate();
+
+        // 2. 计算停放分钟数并向上取整到小时
         long minutes = Duration.between(active.getEntryTime(), now).toMinutes();
-        BigDecimal fee = BigDecimal.valueOf(Math.ceil(minutes / 60.0) * 5); // 5元/小时
+        long hours = (minutes + 59) / 60; // 向上取整
+
+        // 3. 计算总费用
+        BigDecimal fee = hourlyRate.multiply(BigDecimal.valueOf(hours));
 
         // 4. 更新停车记录
         active.setExitTime(now);
@@ -68,6 +84,7 @@ public class ParkingRecordService {
         active.setStatus((byte) 1); // 1 = 已离场
         parkingRecordMapper.updateById(active);
     }
+
     // ====== 新增：基础 CRUD 方法（供 Controller 调用）======
     public List<ParkingRecord> getAllRecords() {
         return parkingRecordMapper.findAll();
@@ -97,5 +114,14 @@ public class ParkingRecordService {
         parkingRecordMapper.deleteById(id);
     }
 
+    public PageInfo<ParkingRecord> findPage(int page, int size, String plateNumber, Byte status) {
+        // 使用 PageHelper 开启分页
+        PageHelper.startPage(page, size);
+        // 调用 Mapper 的条件查询方法
+        List<ParkingRecord> list = parkingRecordMapper.findByCondition(plateNumber, status);
+        // 封装成分页结果
+        return new PageInfo<>(list);
 
+
+    }
 }
