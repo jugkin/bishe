@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/parking-records")
@@ -68,7 +69,14 @@ public class ParkingController {
         ParkingRecord record = new ParkingRecord();
         record.setPlateNumber(plateNumber);
         // 示例：设置一个默认的区域，实际项目中此处逻辑需完善
-        record.setRegionName("东区停车场");
+        String[] regions = {"东区停车场", "西区停车场", "南区停车场", "北区停车场"};
+
+// 2. 随机抽取一个 (0 到 3)
+        Random random = new Random();
+        int randomIndex = random.nextInt(regions.length);
+
+// 3. 赋值给记录
+        record.setRegionName(regions[randomIndex]);
         record.setEntryTime(LocalDateTime.now());
         // 修复：显式将 int 0 转换为 Byte
         record.setStatus(Byte.valueOf((byte) 0)); // 0 代表 "在场"
