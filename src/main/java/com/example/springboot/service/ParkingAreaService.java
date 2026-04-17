@@ -15,13 +15,15 @@ public class ParkingAreaService {
         this.parkingAreaMapper = parkingAreaMapper;
     }
 
-    public List<ParkingArea> list(int page, int size) {
+    // ✅ 修正：调用正确的方法名 selectByPageWithKeyword
+    public List<ParkingArea> list(int page, int size, String keyword) {
         int offset = (page - 1) * size;
-        return parkingAreaMapper.selectByPage(offset, size);
+        return parkingAreaMapper.selectByPageWithKeyword(offset, size, keyword);
     }
 
-    public int count() {
-        return parkingAreaMapper.count();
+    // ✅ 修正：调用正确的方法名 countWithKeyword
+    public int count(String keyword) {
+        return parkingAreaMapper.countWithKeyword(keyword);
     }
 
     /**
@@ -30,8 +32,6 @@ public class ParkingAreaService {
      * @return 是否更新成功
      */
     public boolean update(ParkingArea parkingArea) {
-        // 调用 MyBatis-Plus 提供的 updateById 方法
-        // 它会根据实体中的 id 字段，更新所有非空字段
         int rowsAffected = parkingAreaMapper.updateById(parkingArea);
         return rowsAffected > 0;
     }

@@ -12,6 +12,7 @@
         ORDER BY id
     </select>
 
+    <!-- 保留原有的分页查询（可选） -->
     <select id="selectByPage" resultType="com.example.springboot.entity.ParkingArea">
         SELECT id, area_name AS areaName,
                available_spots AS availableSpots,
@@ -23,9 +24,39 @@
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <!-- 新增：支持关键词搜索的分页查询 -->
+    <select id="selectByPageWithKeyword" resultType="com.example.springboot.entity.ParkingArea">
+        SELECT id, area_name AS areaName,
+        available_spots AS availableSpots,
+        occupied_spots AS occupiedSpots,
+        hourly_rate AS hourlyRate,
+        status
+        FROM parking_area
+        <where>
+            <if test="keyword != null and keyword != ''">
+                area_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 保留原有的 count 查询（可选） -->
     <select id="count" resultType="int">
         SELECT COUNT(*) FROM parking_area
     </select>
+
+    <!-- 新增：支持关键词搜索的 count 查询 -->
+    <select id="countWithKeyword" resultType="int">
+        SELECT COUNT(*)
+        FROM parking_area
+        <where>
+            <if test="keyword != null and keyword != ''">
+                area_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+
     <update id="updateById" parameterType="com.example.springboot.entity.ParkingArea">
         UPDATE parking_area
         <set>

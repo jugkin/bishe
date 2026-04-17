@@ -21,10 +21,13 @@ public class ParkingAreaController {
     @GetMapping
     public Map<String, Object> list(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword) { // <-- 新增这一行
 
-        List<ParkingArea> list = parkingAreaService.list(page, size);
-        int total = parkingAreaService.count();
+        // <-- 修改这一行，将 keyword 传入 service
+        List<ParkingArea> list = parkingAreaService.list(page, size, keyword);
+        // <-- 修改这一行，将 keyword 传入 count
+        int total = parkingAreaService.count(keyword);
 
         // 将 status 转为中文状态
         for (ParkingArea area : list) {
@@ -36,6 +39,7 @@ public class ParkingAreaController {
         result.put("total", total);
         return result;
     }
+
     @PutMapping
     public Map<String, Object> update(@RequestBody ParkingArea parkingArea) {
         // 1. 调用 Service 执行更新
@@ -50,8 +54,5 @@ public class ParkingAreaController {
         }
         return result;
     }
-
-
-
 
 }
