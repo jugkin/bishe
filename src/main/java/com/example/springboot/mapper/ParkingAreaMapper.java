@@ -16,7 +16,6 @@ public interface ParkingAreaMapper {
 
 
 
-
     // <-- 新增：支持关键词搜索的分页方法
     List<ParkingArea> selectByPageWithKeyword(@Param("offset") int offset,
                                               @Param("limit") int limit,
@@ -31,4 +30,5 @@ public interface ParkingAreaMapper {
     int updateById(ParkingArea parkingArea);
     @Select("SELECT * FROM parking_area WHERE area_name = #{areaName}")
     ParkingArea selectByAreaName(@Param("areaName") String areaName);
+
 }
