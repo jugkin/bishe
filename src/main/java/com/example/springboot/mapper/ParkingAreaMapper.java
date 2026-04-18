@@ -14,6 +14,9 @@ public interface ParkingAreaMapper {
     // <-- 保留原有的分页方法（可选，如果确定没地方用可以删掉）
     List<ParkingArea> selectByPage(int offset, int limit);
 
+
+
+
     // <-- 新增：支持关键词搜索的分页方法
     List<ParkingArea> selectByPageWithKeyword(@Param("offset") int offset,
                                               @Param("limit") int limit,
